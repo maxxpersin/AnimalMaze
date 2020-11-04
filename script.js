@@ -60,6 +60,11 @@ function setTiles() {
                             rabbits.push({ animal: 'rabbit', x: j, y: i, originX: j, originY: i })
                             break;
                     }
+
+                    if (tile.classList.length > 2) {
+                        tile.classList = [];
+                        tile.classList.add('tile');
+                    }
                 }
             }
 
@@ -85,23 +90,37 @@ function moveAnimals() {
 
 function moveMonekys() {
     monkeys.forEach(monkey => {
-        let boundry = getBoundry(monkey.x, monkey.y);
-        if (!boundry.left) {
-            let monkeyLoc = tiles[monkey.y][monkey.x];
-            monkeyLoc.style.left = monkeyLoc.style.left - monkeyLoc.getBoundingClientRect().width;
+        if (tiles[monkey.y][monkey.x]) {
+            tiles[monkey.y][monkey.x].classList.remove('monkey');
+            monkey.x -= 1;
+            if (tiles[monkey.y][monkey.x]) {
+                tiles[monkey.y][monkey.x].classList.add('monkey');
+            }
         }
     });
 }
 
 function moveTurkeys() {
     turkeys.forEach(turkey => {
-
+        if (tiles[turkey.y][turkey.x]) {
+            tiles[turkey.y][turkey.x].classList.remove('turkey');
+            turkey.x -= 1;
+            if (tiles[turkey.y][turkey.x]) {
+                tiles[turkey.y][turkey.x].classList.add('turkey');
+            }
+        }
     });
 }
 
 function moveRabbits() {
     rabbits.forEach(rabbit => {
-
+        if (tiles[rabbit.y][rabbit.x]) {
+            tiles[rabbit.y][rabbit.x].classList.remove('rabbit');
+            rabbit.x -= 1;
+            if (tiles[rabbit.y][rabbit.x]) {
+                tiles[rabbit.y][rabbit.x].classList.add('rabbit');
+            }
+        }
     });
 }
 
