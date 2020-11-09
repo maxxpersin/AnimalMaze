@@ -2,6 +2,7 @@ var monkeys = [];
 var rabbits = [];
 var turkeys = [];
 var tiles = [];
+var speedActive = false;
 
 function init() {
     setTiles();
@@ -9,8 +10,14 @@ function init() {
     var clock = document.getElementById('clock');
     setInterval(renderTime, 1000);
 
-    setInterval(moveAnimals, 1000);
-    //moveAnimals();
+    let inter = setInterval(moveAnimals, speedActive ? 500 : 1000);
+
+    var button = document.getElementById('speed');
+    button.addEventListener('click', () => {
+        clearInterval(inter);
+        speedActive = !speedActive;
+        inter = setInterval(moveAnimals, speedActive ? 500 : 1000);
+    });
 }
 
 function setTiles() {
@@ -60,11 +67,6 @@ function setTiles() {
                             rabbits.push({ animal: 'rabbit', x: j, y: i, originX: j, originY: i })
                             break;
                     }
-
-                    if (tile.classList.length > 2) {
-                        tile.classList = [];
-                        tile.classList.add('tile');
-                    }
                 }
             }
 
@@ -72,8 +74,6 @@ function setTiles() {
             maze.appendChild(tile);
         }
     }
-
-    console.log(tiles);
 }
 
 function getRandomInt(min, max) {
@@ -89,37 +89,91 @@ function moveAnimals() {
 }
 
 function moveMonekys() {
-    monkeys.forEach(monkey => {
-        if (tiles[monkey.y][monkey.x]) {
-            tiles[monkey.y][monkey.x].classList.remove('monkey');
-            monkey.x -= 1;
-            if (tiles[monkey.y][monkey.x]) {
-                tiles[monkey.y][monkey.x].classList.add('monkey');
+    monkeys.forEach((monkey, idx) => {
+        try {
+            if (monkey && tiles[monkey.y][monkey.x]) {
+                tiles[monkey.y][monkey.x].classList.remove('monkey');
+                switch (getRandomInt(0, 5)) {
+                    case 0:
+                        monkey.x -= 1;
+                        break;
+                    case 1:
+                        monkey.x += 1;
+                        break;
+                    case 2:
+                        monkey.y -= 1;
+                        break;
+                    case 3:
+                        monkey.y += 1;
+                        break;
+                    case 4:
+                        break;
+                }
+                if (monkey && tiles[monkey.y][monkey.x]) {
+                    tiles[monkey.y][monkey.x].classList.add('monkey');
+                }
             }
+        } catch (error) {
         }
     });
 }
 
 function moveTurkeys() {
     turkeys.forEach(turkey => {
-        if (tiles[turkey.y][turkey.x]) {
-            tiles[turkey.y][turkey.x].classList.remove('turkey');
-            turkey.x -= 1;
-            if (tiles[turkey.y][turkey.x]) {
-                tiles[turkey.y][turkey.x].classList.add('turkey');
+        try {
+            if (turkey && tiles[turkey.y][turkey.x]) {
+                tiles[turkey.y][turkey.x].classList.remove('turkey');
+                switch (getRandomInt(0, 5)) {
+                    case 0:
+                        turkey.x -= 1;
+                        break;
+                    case 1:
+                        turkey.x += 1;
+                        break;
+                    case 2:
+                        turkey.y -= 1;
+                        break;
+                    case 3:
+                        turkey.y += 1;
+                        break;
+                    case 4:
+                        break;
+                }
+                if (turkey && tiles[turkey.y][turkey.x]) {
+                    tiles[turkey.y][turkey.x].classList.add('turkey');
+                }
             }
+        } catch (error) {
         }
     });
 }
 
 function moveRabbits() {
     rabbits.forEach(rabbit => {
-        if (tiles[rabbit.y][rabbit.x]) {
-            tiles[rabbit.y][rabbit.x].classList.remove('rabbit');
-            rabbit.x -= 1;
-            if (tiles[rabbit.y][rabbit.x]) {
-                tiles[rabbit.y][rabbit.x].classList.add('rabbit');
+        try {
+            if (rabbit && tiles[rabbit.y][rabbit.x]) {
+                tiles[rabbit.y][rabbit.x].classList.remove('rabbit');
+                switch (getRandomInt(0, 5)) {
+                    case 0:
+                        rabbit.x -= 1;
+                        break;
+                    case 1:
+                        rabbit.x += 1;
+                        break;
+                    case 2:
+                        rabbit.y -= 1;
+                        break;
+                    case 3:
+                        rabbit.y += 1;
+                        break;
+                    case 4:
+                        break;
+                }
+                if (rabbit && tiles[rabbit.y][rabbit.x]) {
+                    tiles[rabbit.y][rabbit.x].classList.add('rabbit');
+                }
             }
+        } catch (error) {
         }
     });
 }
@@ -146,19 +200,19 @@ function noBoundry(tile) { // Ensure all animal tiles have no borders, for bette
     return true;
 }
 
-function getBoundry(y, x) {
+function getBoundry(x, y) {
     let boundry = { top: false, left: false, bottom: false, right: false };
 
-    if (y < 15 && tiles[x][y + 1].style['border-bottom']) { // TOP
+    if (y < 15 && (tiles[x][y + 1].style['border-top'] || tiles[x][y].style['border-bottom'])) { // BOTTOM
         boundry.top = true;
     }
-    if (y > 0 && tiles[x][y - 1].style['border-top']) { // BOTTOM
+    if (y > 0 && (tiles[x][y - 1].style['border-bottom'] || tiles[x][y].style['border-top'])) { // TOP
         boundry.bottom = true;
     }
-    if (x > 0 && tiles[x - 1][y].style['border-right']) { // LEFT
+    if (x > 0 && (tiles[x - 1][y].style['border-right'] || tiles[x][y].style['border-left'])) { // LEFT
         boundry.left = true;
     }
-    if (x < 15 && tiles[x + 1][y].style['border-left']) {
+    if (x < 15 && (tiles[x + 1][y].style['border-left'] || tiles[x][y].style['border-right'])) { // RIGHT
         boundry.right = true;
     }
 
